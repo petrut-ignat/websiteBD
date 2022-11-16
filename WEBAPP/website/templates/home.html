@@ -1,15 +1,9 @@
 {% extends "base.html" %} {% block title %}Home{% endblock %} {% block content
     %}
+    <!--
     <h1 align="center">Notes</h1>
     <ul class="list-group list-group-flush" id="notes">
-      {% for note in user.notes %}
-      <li class="list-group-item">
-        {{ note.data }}
-        <button type="button" class="close" onClick="deleteNote({{ note.id }})">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </li>
-      {% endfor %}
+      
     </ul>
     <form method="POST">
       <textarea name="note" id="note" class="form-control"></textarea>
@@ -18,4 +12,34 @@
         <button type="submit" class="btn btn-primary">Add Note</button>
       </div>
     </form>
+  -->
+  <h1>Fotomodele</h1>
+  
+  <table class="table">
+    <thead class="thead-dark">
+      <td><b>ID</b></td>
+      <td><b>nume</b></td>
+      <td><b>prenume</b></td>
+      <td><b>cnp</b></td>
+      <td><b>sex</b></td>
+      <td><b>strada</b></td>
+      <td><b>numar</b></td>
+      <td><b>oras</b></td>
+      <td><b>judet</b></td>
+    </thead>
+    {% for i in range(0, vector|length):%}
+      <tr>
+        <td>{{vector[i][0]}}</td>
+        <td>{{vector[i][1]}}</td>
+        <td>{{vector[i][2]}}</td>
+        <td>{{vector[i][3]}}</td>
+        <td>{{vector[i][4]}}</td>
+        <td>{{vector[i][5]}}</td>
+        <td>{{vector[i][6]}}</td>
+        <td>{{vector[i][7]}}</td>
+        <td>{{vector[i][8]}}</td>
+      </tr>
+    {% endfor %}
+  </table>
+
     {% endblock %}

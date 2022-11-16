@@ -1,0 +1,106 @@
+{% extends "base.html" %}
+
+{% block title %}Fotomodele{% endblock %}
+
+{% block content %}
+
+<h1 align="center">Fotomodele</h1>
+<br><br>
+
+{% if session['email'] == "petrutgabriel@gmail.com" %}
+<input id="dynamic" name="AddFot" type="button" value="Adauga fotomodel" class="btn btn-primary" onclick = "Openform();">
+
+<button class="btn btn-primary" type="submit">Elimina fotomodel</button>
+<br>
+<br>
+<div id = "form1" style = "display:none">
+    <form method="POST">
+        <h3 align="center">Adaugare Fotomodel</h3><br>
+        <div class="form-row">
+            <div class="col">
+                <label for="nume">Nume</label>
+                <input type="text" class="form-control" id="nume" name="nume" placeholder="Nume"/>
+            </div>
+
+            <div class="col">
+                <label for="prenume">Prenume</label>
+                <input type="text" class="form-control" id="prenume" name="prenume" placeholder="Preume"/>
+            </div>
+        </div><br>
+
+        <div class="from-group">
+            <label for="cnp">CNP</label>
+            <input type="text" class="form-control" id="cnp" name="cnp" placeholder="CNP"/>
+        </div><br>
+
+        <div class="form-group">
+            <label>Sex</label><br>
+            <input type="radio" id="sex" name="sex" value="M"/>&nbsp; M &nbsp;&nbsp;
+            <input type="radio" id="sex" name="sex" value="F"/>&nbsp; F<br>
+        </div>
+
+        <div class="form-row">
+            <div class="col">
+                <label for="strada">Strada</label>
+                <input type="text" class="form-control" id="strada" name="strada" placeholder="Strada"/>
+            </div>
+
+            <div class="col">
+                <label for="numar">Numar</label>
+                <input type="number" class="form-control" id="numar" name="numar" placeholder="Numar"/>
+            </div>
+        </div><br>
+
+        <div class="form-row">
+            <div class="col">
+                <label for="oras">Oras</label>
+                <input type="text" class="form-control" id="oras" name="oras" placeholder="Oras"/>
+            </div>
+
+            <div class="col">
+                <label for="Judet">Judet/Sector</label>
+                <input type="text" class="form-control" id="judet" name="judet" placeholder="Judet/Sector"/>
+            </div>
+        </div><br>
+        <button type="submit" class="btn btn-primary">Adauga</button>
+        <input type="button" id="clsform" name="clsform" class="btn btn-primary" value="Iesire" onclick="CloseForm();">
+          
+    </form>
+</div>
+<br><br>
+{% endif %}
+
+  <table class="table">
+    <thead class="thead-dark">
+      <td><b>ID</b></td>
+      <td><b>Nume</b></td>
+      <td><b>Prenume</b></td>
+      <td><b>CNP</b></td>
+      <td><b>Sex</b></td>
+      <td><b>Strada</b></td>
+      <td><b>Numar</b></td>
+      <td><b>Oras</b></td>
+      <td><b>Judet</b></td>
+      <td></td>
+    </thead>
+    {% for i in range(0, vector|length):%}
+      <tr>
+        <td>{{vector[i][0]}}</td>
+        <td>{{vector[i][1]}}</td>
+        <td>{{vector[i][2]}}</td>
+        <td>{{vector[i][3]}}</td>
+        <td>{{vector[i][4]}}</td>
+        <td>{{vector[i][5]}}</td>
+        <td>{{vector[i][6]}}</td>
+        <td>{{vector[i][7]}}</td>
+        <td>{{vector[i][8]}}</td>
+        <td>
+            <button type="button" class="close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </td>
+      </tr>
+    {% endfor %}
+  </table>
+
+{% endblock %}

@@ -15,3 +15,12 @@ function deleteNote(noteId) {
       window.location.href = "/";
     });
   }
+
+function Openform(){
+  document.getElementById('form1').style.display = 'block';
+}
+
+function CloseForm(){
+  document.getElementById('form1').style.display = 'none';
+}
+
