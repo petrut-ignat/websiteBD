@@ -10,7 +10,9 @@
 {% if session['email'] == "petrutgabriel@gmail.com" %}
 <input id="dynamic" name="AddFot" type="button" value="Adauga fotomodel" class="btn btn-primary" onclick = "Openform();">
 
-<button class="btn btn-primary" type="submit">Elimina fotomodel</button>
+<a href="/elimina">
+    <input type = "button" id="dynamic" name="RemFot" value="Elimina fotomodel" class="btn btn-primary">
+</a>
 <br>
 <br>
 <div id = "form1" style = "display:none">
@@ -62,17 +64,17 @@
                 <input type="text" class="form-control" id="judet" name="judet" placeholder="Judet/Sector"/>
             </div>
         </div><br>
-        <button type="submit" class="btn btn-primary">Adauga</button>
+        <button type="submit" class="btn btn-primary" name="AddModel">Adauga</button>
         <input type="button" id="clsform" name="clsform" class="btn btn-primary" value="Iesire" onclick="CloseForm();">
           
     </form>
 </div>
-<br><br>
+
 {% endif %}
 
   <table class="table">
     <thead class="thead-dark">
-      <td><b>ID</b></td>
+      <td><b>Nr.</b></td>
       <td><b>Nume</b></td>
       <td><b>Prenume</b></td>
       <td><b>CNP</b></td>
@@ -85,7 +87,7 @@
     </thead>
     {% for i in range(0, vector|length):%}
       <tr>
-        <td>{{vector[i][0]}}</td>
+        <td>{{i+1}}</td>
         <td>{{vector[i][1]}}</td>
         <td>{{vector[i][2]}}</td>
         <td>{{vector[i][3]}}</td>
@@ -95,12 +97,17 @@
         <td>{{vector[i][7]}}</td>
         <td>{{vector[i][8]}}</td>
         <td>
-            <button type="button" class="close">
+            <!-- <button type="button" class="close" onclick="RemoveRow()">
                 <span aria-hidden="true">&times;</span>
-            </button>
+            </button> -->
+
+            <input type="button" value = "x" class="close" onclick="RemoveRow()">
+
         </td>
       </tr>
     {% endfor %}
   </table>
+
+  
 
 {% endblock %}

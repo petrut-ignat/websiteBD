@@ -16,145 +16,54 @@
       crossorigin="anonymous"
     />
 
-      <style>
-        .body1{
-          background:#abd699;;
-        }
-
-        body{
-          margin: 0;
-          padding: 0;
-          height: 100vh;
-          display: flex;
-          justify-content: center;
-          align-items: center;
-          background: #abd699;
-        }
-
-        a{
-          font-weight: bold;
-        }
-
-        .slider{
-          width: 800px;
-          height: 500px;
-          border-radius: 10px;
-          overflow: hidden;
-        }
-
-        .slides{
-          width: 500%;
-          height: 500px;
-          display: flex;
-        }
-
-        .slides input{
-          display: none;
-        }
-
-        .slide{
-          width: 20%;
-          transition: 2s;
-        }
-
-        .slide img{
-          width: 800px;
-          height: 500px;
-        }
-
-        .navigation-manual{
-          position: absolute;
-          width: 800px;
-          margin-top: -40px;
-          display: flex;
-          justify-content: center;
-        }
-
-        .manual-btn{
-          border: 2px solid #40d3dc;
-          padding: 5px;
-          border-radius: 10px;
-          cursor: pointer;
-          transition: 1s;
-        }
-
-        .manual-btn:not(:last-child){
-          margin-right: 40px;
-        }
-
-        .manual-btn:hover{
-          background: #40d3dc;
-        }
-
-        #radio1:checked ~ .first{
-          margin-left: 0;
-        }
-
-        #radio2:checked ~ .first{
-          margin-left: -20%;
-        }
-
-        #radio3:checked ~ .first{
-          margin-left: -40%;
-        }
-
-        #radio4:checked ~ .first{
-          margin-left: -60%;
-        }
-
-        .navigation-auto{
-          position: absolute;
-        }
-
-        .navigation-auto div{
-          border: absolute;
-          display: flex;
-          width: 800px;
-          justify-content: center;
-        }
-      </style>
+    <style>
+      body{
+        background: #abd699;
+      }
+    </style>
 
     <title>{% block title %}Home{% endblock %}</title>
 
     </head>
-    <body class="body1">
-      <nav class="navbar fixed-top navbar-expand-lg navbar-light" style="background-color: #75c9b7;">
-        <button
-          class="navbar-toggler"
-          type="button"
-          data-toggle="collapse"
-          data-target="#navbar"
-        >
-          <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbar">
-          <div class="navbar-nav">
-            <a class="nav-item nav-link" id="home" href="/">Home</a>
-            {% if session['name'] %}
-            <a class="nav-item nav-link" id="logout" href="/logout">Logout</a>
-            <a class="nav-item nav-link" id="fotomodele" href="/fotomodele">Fotomodele</a>
-            
-            {% else %}
-            <a class="nav-item nav-link" id="login" href="/login">Login</a>
-            <a class="nav-item nav-link" id="signUp" href="/sign-up">Sign Up</a>
-            <a class="nav-item nav-link" id="fotomodele" href="/fotomodele"><Fieldset>Fotomodele</Fieldset></a>
-            {% endif %}
-          </div>
+    <body class="body2">
+      <nav class="navbar sticky-top navbar-expand-lg navbar-dark bg-dark" style="padding: 0px;">
+        <a class="navbar-brand" href="/">
+          <img src="{{url_for('static', filename='logo.png')}}" alt=""style="height: 70px; width=70px; padding: 0;">
+        </a>
+      <!-- <img src="{{url_for('static', filename='logo.png')}}" alt=""style="height: 70px; width=70px; padding: 0;"> -->
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbar">
+        <div class="navbar-nav">
+          <a class="nav-item nav-link" id="home" href="/">Home</a>
+  
+          {% if not session['name'] %}
+          <a class="nav-item nav-link" id="login" href="/login">Login</a>
+          <a class="nav-item nav-link" id="signUp" href="/sign-up">Sign Up</a>
+          {% endif %}
+  
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Meniu</a>
+            <div class="dropdown-menu" aria-labelledby="navbarDropdown" style="background: #343a40;">
+              <a class="dropdown-item" id="fotomodele" href="/fotomodele" style="color: #9a9da0;">Fotomodele</a>
+              <a class="dropdown-item" id="adauga" href="/fotomodele" style="color: #9a9da0;">Adauga fotomodel</a>
+              <a class="dropdown-item" id="elimina" href="/elimina"style="color: #9a9da0;">Elimina fotomodel</a>
+              {% if session['name'] %}
+              <a class="dropdown-item" id="logout" href="/logout" style="color: #9a9da0;">Logout</a>
+              {% endif %}
+            </div>
+          </li>
         </div>
-        <form class="form-inline">
-          <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
-          <button class="btn btn-primary my-2 my-sm-0" type="submit">Search</button>
-        </form>
-        <script src="https://cdn.lordicon.com/qjzruarw.js"></script>
-<lord-icon
-    src="https://cdn.lordicon.com/gqqykmqo.json"
-    trigger="hover"
-    style="width:50px;height:50px">
-</lord-icon>
-
-
-
-      </nav>
+      </div>
+      <form class="form-inline">
+        <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+        <button class="btn my-2 my-sm-0" type="submit" style="background-color: #abd699;">Search</button>
+      </form>
+      <script src="https://cdn.lordicon.com/qjzruarw.js"></script>
+      <lord-icon src="https://cdn.lordicon.com/gqqykmqo.json" trigger="hover" style="width:50px;height:50px">
+      </lord-icon>
+    </nav>
 
       {% with messages = get_flashed_messages(with_categories=true) %}
       {% if messages %}

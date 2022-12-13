@@ -18,7 +18,7 @@ mysql1 = MySQL(app)
 
 @app.route('/', methods=['POST', 'GET'])
 def home():
- 
+
     connection = mysql.connector.connect(host='127.0.0.1',
                                          database='modellingagency',
                                          user='root',
@@ -26,7 +26,7 @@ def home():
     cursor = connection.cursor()
     cursor.execute("SELECT * FROM fotomodel")
     results = cursor.fetchall()
-    
+
     return render_template('home.html', vector=results)
 
 
@@ -65,7 +65,8 @@ def sign_up():
                 flash("Signed up!", category="success")
                 return redirect(url_for("home"))
         else:
-            flash("This email already exists in our database, please login!", category="error")
+            flash(
+                "This email already exists in our database, please login!", category="error")
             return render_template("sign_up.html")
 
 
@@ -101,24 +102,25 @@ def login():
 def logout():
     session.clear()
     return redirect(url_for("home"))
-    #return render_template("home.html")
+    # return render_template("home.html")
 
-@app.route('/fotomodele', methods=['GET', 'POST'])
+
+@app.route('/fotomodele', methods=['GET', 'POST', 'POST'])
 def fotomodele():
     if request.method == "GET":
         connection = mysql.connector.connect(host='127.0.0.1',
-                                            database='modellingagency',
-                                            user='root',
-                                            password='petrut123#')
+                                             database='modellingagency',
+                                             user='root',
+                                             password='petrut123#')
         cursor = connection.cursor()
         cursor.execute("SELECT * FROM fotomodel;")
         results = cursor.fetchall()
         return render_template("fotomodele.html",  vector=results)
     else:
         connection = mysql.connector.connect(host='127.0.0.1',
-                                            database='modellingagency',
-                                            user='root',
-                                            password='petrut123#')
+                                             database='modellingagency',
+                                             user='root',
+                                             password='petrut123#')
         cursor = connection.cursor()
         cursor.execute("SELECT * FROM fotomodel;")
         results = cursor.fetchall()
@@ -136,10 +138,11 @@ def fotomodele():
             return render_template("fotomodele.html",  vector=results)
         else:
             numar = int(float(numar))
-            print("sex: ", sex, "-> ", type(sex), len(sex), "->", sex=="M")
+            print("sex: ", sex, "-> ", type(sex), len(sex), "->", sex == "M")
             if sex == "M" or sex == "F":
                 if len(nume) < 3 or len(prenume) < 3:
-                    flash("First and last name must not be less than 3 characters!", category="error")
+                    flash(
+                        "First and last name must not be less than 3 characters!", category="error")
                     return render_template("fotomodele.html",  vector=results)
                 else:
                     if len(cnp) < 13 or len(cnp) > 13:
@@ -156,13 +159,41 @@ def fotomodele():
                             cur.execute(query)
                             mysql1.connection.commit()
 
-                            flash("Fotomodel adaugat cu succes!", category="success")
-                            #return redirect(url_for("fotomodele"))
+                            flash("Fotomodel adaugat cu succes!",
+                                  category="success")
+                            # return redirect(url_for("fotomodele"))
                             return render_template("fotomodele.html",  vector=results)
             else:
                 flash("You must select the gender!", category="error")
                 return render_template("fotomodele.html",  vector=results)
-    
+
+
+@app.route('/elimina', methods=['GET', 'POST'])
+def elimina():
+    if request.method == "GET":
+        return render_template("elimina.html")
+    else:
+        cursor = mysql1.connection.cursor()
+        cnp = request.form['cnp']
+
+        query2 = f"SELECT * FROM fotomodel WHERE cnp = '{cnp}'"
+        cursor.execute(query2)
+        res = cursor.fetchone()
+        if res:
+            if len(cnp) == 13:
+                query = f"DELETE FROM fotomodel WHERE cnp = '{cnp}'"
+                cursor.execute(query)
+                mysql1.connection.commit()
+                
+                flash("The model was successfully removed!", category="success")
+                return redirect(url_for("fotomodele"))
+            else:
+                flash("CNP must be 13 characters long!", category="error")
+                return render_template("elimina.html")
+        else:
+            flash("The CNP could not be found in the database, please try again!", category="error")
+            return render_template("elimina.html")
+
 
 if __name__ == '__main__':
     app.secret_key = "i//g]naxtedsvcubzebogsks"
