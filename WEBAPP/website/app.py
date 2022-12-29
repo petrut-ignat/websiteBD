@@ -13,7 +13,6 @@ app.config['MYSQL_PASSWORD'] = 'petrut123#'
 app.config['MYSQL_DB'] = 'modellingagency'
 app.config['MYSQL_CURSORCLASS'] = 'DictCursor'
 mysql1 = MySQL(app)
-# mysql1.init_app(app)
 
 
 @app.route('/', methods=['POST', 'GET'])
