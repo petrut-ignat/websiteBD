@@ -105,7 +105,7 @@ def logout():
     # return render_template("home.html")
 
 
-@app.route('/fotomodele', methods=['GET', 'POST', 'POST'])
+@app.route('/fotomodele', methods=['GET', 'POST'])
 def fotomodele():
     if request.method == "GET":
         connection = mysql.connector.connect(host='127.0.0.1',
@@ -113,9 +113,16 @@ def fotomodele():
                                              user='root',
                                              password='petrut123#')
         cursor = connection.cursor()
-        cursor.execute("SELECT * FROM fotomodel;")
+        cursor.execute("SELECT nume, prenume, cnp, sex, denumire FROM fotomodel f, eveniment e, fotomodel_eveniment fe \
+            WHERE e.id_eveniment = fe.id_eveniment AND f.id_fotomodel = fe.id_fotomodel \
+                GROUP BY nume ORDER BY data DESC;")
         results = cursor.fetchall()
-        return render_template("fotomodele.html",  vector=results)
+
+        cursor.execute(
+            "SELECT f.nume, f.prenume, m.nume, m.prenume FROM fotomodel f, manager_personal m WHERE f.id_fotomodel = m.id_fotomodel;")
+        results2 = cursor.fetchall()
+
+        return render_template("fotomodele.html",  vector=results, vector3=results2)
     else:
         connection = mysql.connector.connect(host='127.0.0.1',
                                              database='modellingagency',
@@ -153,7 +160,8 @@ def fotomodele():
                             flash("Invalid address!", category="error")
                             return render_template("fotomodele.html",  vector=results)
                         else:
-                            query = f"INSERT INTO fotomodel (nume, prenume, cnp, sex, strada, numar, oras, judet) VALUES('{nume}', '{prenume}', '{cnp}', '{sex}', '{strada}', {numar}, '{oras}', '{judet}')"
+                            query = f"INSERT INTO fotomodel (nume, prenume, cnp, sex, strada, numar, oras, judet) \
+                                VALUES('{nume}', '{prenume}', '{cnp}', '{sex}', '{strada}', {numar}, '{oras}', '{judet}')"
 
                             cur = mysql1.connection.cursor()
                             cur.execute(query)
@@ -171,28 +179,143 @@ def fotomodele():
 @app.route('/elimina', methods=['GET', 'POST'])
 def elimina():
     if request.method == "GET":
-        return render_template("elimina.html")
-    else:
         cursor = mysql1.connection.cursor()
-        cnp = request.form['cnp']
+        queryy = f"select denumire, cost, data, locatia, name from eveniment join event_category on id_ev_category = id_categ_eveniment"
 
-        query2 = f"SELECT * FROM fotomodel WHERE cnp = '{cnp}'"
-        cursor.execute(query2)
+        cursor.execute(queryy)
+        results = cursor.fetchall()
+        return render_template("elimina.html", vector2=results)
+    else:
+
+        cursor = mysql1.connection.cursor()
+        eveniment = request.form['eveniment']
+
+        query = f"SELECT cnp AS cnpp FROM fotomodel f, eveniment e, fotomodel_eveniment fe WHERE f.id_fotomodel = fe.id_fotomodel AND e.id_eveniment = fe.id_eveniment AND e.denumire = '{eveniment}'"
+        cursor.execute(query)
         res = cursor.fetchone()
+
         if res:
-            if len(cnp) == 13:
-                query = f"DELETE FROM fotomodel WHERE cnp = '{cnp}'"
-                cursor.execute(query)
-                mysql1.connection.commit()
-                
-                flash("The model was successfully removed!", category="success")
-                return redirect(url_for("fotomodele"))
-            else:
-                flash("CNP must be 13 characters long!", category="error")
-                return render_template("elimina.html")
+            query2 = f"delete FROM fotomodel WHERE cnp IN \
+                (SELECT cnpp FROM \
+                    (SELECT cnp AS cnpp FROM fotomodel f, eveniment e, fotomodel_eveniment fe \
+                        WHERE f.id_fotomodel = fe.id_fotomodel AND e.id_eveniment = fe.id_eveniment \
+                            AND e.denumire = '{eveniment}') AS C);"
+            cursor.execute(query2)
+            mysql1.connection.commit()
+
+            flash("The model was successfully removed!", category="success")
+            return redirect(url_for("fotomodele"))
         else:
-            flash("The CNP could not be found in the database, please try again!", category="error")
+            flash(
+                "The CNP could not be found in the database, please try again!", category="error")
             return render_template("elimina.html")
+
+
+@app.route('/afisare', methods=['GET', 'POST'])
+def afisare():
+    if request.method == 'GET':
+        cursor = mysql1.connection.cursor()
+        query = f"select e.denumire, count(id_fotomodel) as nrFotomodele from eveniment e, fotomodel_eveniment fe where e.id_eveniment = fe.id_eveniment group by e.denumire order by count(id_fotomodel) desc, denumire;"
+
+        cursor.execute(query)
+        results = cursor.fetchall()
+        return render_template("afisare.html", vector2=results)
+    else:
+        oras = request.form['oras']
+        cursor = mysql1.connection.cursor()
+
+        query = f"select f.nume, f.prenume, f.cnp, f.sex \
+            from fotomodel f, manager_personal m \
+                where f.id_fotomodel = m.id_fotomodel and m.oras = '{oras}';"
+
+        cursor.execute(query)
+        results = cursor.fetchall()
+
+        query2 = f"select e.denumire, count(id_fotomodel) as nrFotomodele from eveniment e, fotomodel_eveniment fe where e.id_eveniment = fe.id_eveniment group by e.denumire order by count(id_fotomodel) desc, denumire;"
+
+        cursor.execute(query2)
+        results2 = cursor.fetchall()
+
+        return render_template("afisare.html", vector=results, vector2=results2)
+
+
+@app.route('/form1-handler', methods=['POST', 'GET'])
+def form1_handler():
+    an = request.form['an']
+    an = int(an)
+    cursor = mysql1.connection.cursor()
+    query = f"SELECT nume, prenume, YEAR(data_angajare) AS an \
+                FROM fotomodel f, contract c \
+                WHERE f.id_fotomodel = c.id_fotomodel AND YEAR(data_angajare) > {an} \
+                GROUP BY nume, prenume \
+                ORDER BY YEAR(data_angajare) DESC"
+    cursor.execute(query)
+    results = cursor.fetchall()
+
+    query3 = f"SELECT I.nume, I.prenume, I.salariu FROM \
+        (SELECT f.nume, f.prenume, c.salariu FROM \
+            fotomodel f, contract c WHERE f.id_fotomodel = c.id_fotomodel) AS I ORDER BY salariu DESC LIMIT 5;"
+    cursor.execute(query3)
+    results1 = cursor.fetchall()
+
+    query2 = f"select year(data_angajare) as an, count(id_fotomodel) nrFot \
+            from contract \
+                group by year(data_angajare) \
+                having count(id_fotomodel)=(select max(s.nrang) \
+                from (select (count(id_fotomodel)) as nrang from contract group by year(data_angajare)) as s);"
+    cursor.execute(query2)
+    results3 = cursor.fetchall()
+
+    return render_template("afisare2.html", vectan=results, vector=results1, vector3=results3)
+
+
+@app.route('/form2-handler', methods=['POST'])
+def form2_handler():
+    salariu = request.form['salariu']
+    salariu = int(salariu)
+    cursor = mysql1.connection.cursor()
+
+    query = f"SELECT f.id_fotomodel, f.nume, f.prenume \
+            FROM fotomodel f WHERE EXISTS (SELECT id_fotomodel \
+                FROM contract c WHERE c.salariu < {salariu} and c.id_fotomodel = f.id_fotomodel)"
+    cursor.execute(query)
+    results = cursor.fetchall()
+
+    query3 = f"SELECT I.nume, I.prenume, I.salariu FROM \
+        (SELECT f.nume, f.prenume, c.salariu FROM \
+            fotomodel f, contract c WHERE f.id_fotomodel = c.id_fotomodel) AS I ORDER BY salariu DESC LIMIT 5;"
+    cursor.execute(query3)
+    results1 = cursor.fetchall()
+
+    query2 = f"select year(data_angajare) as an, count(id_fotomodel) nrFot \
+            from contract \
+                group by year(data_angajare) \
+                having count(id_fotomodel)=(select max(s.nrang) \
+                from (select (count(id_fotomodel)) as nrang from contract group by year(data_angajare)) as s);"
+    cursor.execute(query2)
+    results3 = cursor.fetchall()
+
+    return render_template("afisare2.html", vector4=results, vector=results1, vector3=results3)
+
+
+@app.route('/statistici', methods=['GET', 'POST'])
+def statistici():
+    if request.method == 'GET':
+        cursor = mysql1.connection.cursor()
+        query = f"SELECT I.nume, I.prenume, I.salariu FROM \
+            (SELECT f.nume, f.prenume, c.salariu FROM \
+                fotomodel f, contract c WHERE f.id_fotomodel = c.id_fotomodel) AS I ORDER BY salariu DESC LIMIT 5;"
+        cursor.execute(query)
+        results1 = cursor.fetchall()
+
+        query3 = f"select year(data_angajare) as an, count(id_fotomodel) nrFot \
+            from contract \
+                group by year(data_angajare) \
+                having count(id_fotomodel)=(select max(s.nrang) \
+                from (select (count(id_fotomodel)) as nrang from contract group by year(data_angajare)) as s);"
+        cursor.execute(query3)
+        results3 = cursor.fetchall()
+        return render_template("afisare2.html", vector=results1, vector3=results3)
 
 
 if __name__ == '__main__':

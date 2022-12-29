@@ -3,17 +3,41 @@
 {% block content %}
 
 <div id="form2">
-    <form method="POST">
-        <h3 align="center">Elimina fotomodel</h3><br>
-        <div class="form-row">
-            <div class="form-group">
-                <label for="cnp">CNP</label>
-                <input type="text" class="form-control" id="cnp" name="cnp" placeholder="CNP">
-            </div>
-        </div>
-        <button type="submit" class="btn btn-primary" name="RemModel">Elimina</button>
-    </form>
+  <form method="POST">
+    <br>
+    <h3 align="center">Elimina fotomodel</h3><br>
+    <h4 align="left">Introdu evenimentul la care participa fotomodelele pe care vrei sa le elimini.</h4><br>
+    <div class="form-row">
+      <div class="form-group">
+        <label for="eveniment">Eveniment</label>
+        <input type="text" class="form-control" id="eveniment" name="eveniment" placeholder="Eveniment">
+      </div>
+    </div>
+    <button type="submit" class="btn btn-primary" name="RemModel">Elimina</button>
+  </form>
 </div>
 <br><br>
+
+<h3>Evenimente</h3>
+<table class="table">
+  <thead class="thead-dark">
+    <td><b>Nr.</b></td>
+    <td><b>Denumire</b></td>
+    <td><b>Cost</b></td>
+    <td><b>Data</b></td>
+    <td><b>Locatia</b></td>
+    <td><b>Categorie</b></td>
+  </thead>
+  {% for i in range(0, vector2|length):%}
+  <tr>
+    <td>{{i+1}}</td>
+    <td>{{vector2[i]['denumire']}}</td>
+    <td>{{vector2[i]['cost']}}</td>
+    <td>{{vector2[i]['data']}}</td>
+    <td>{{vector2[i]['locatia']}}</td>
+    <td>{{vector2[i]['name']}}</td>
+  </tr>
+  {% endfor %}
+</table>
 
 {% endblock %}

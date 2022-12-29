@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+{% block title %} Afisare {% endblock %}
+{% block content %}
+
+<div id="form">
+  <form method="POST">
+    <br>
+    <h3 align="center">Afiseaza fotomodele</h3><br>
+    <h4 align="left">Introdu orasul in care traiesc managerii fotomodelelor pe care vrei sa la afisezi.</h4><br>
+    <div class="form-row">
+      <div class="form-group">
+        <label for="oras">Oras</label>
+        <input type="text" class="form-control" id="oras" name="oras" placeholder="oras">
+      </div>
+    </div>
+    <button type="submit" class="btn btn-primary">Afiseaza</button>
+  </form>
+</div><br>
+
+{% if vector|length > 0 %}
+<table class="table">
+  <thead class="thead-dark">
+    <td><b>Nr.</b></td>
+    <td><b>Nume</b></td>
+    <td><b>Prenume</b></td>
+    <td><b>CNP</b></td>
+    <td><b>Sex</b></td>
+  </thead>
+  {% for i in range(0, vector|length):%}
+  <tr>
+    <td>{{i+1}}</td>
+    <td>{{vector[i]['nume']}}</td>
+    <td>{{vector[i]['prenume']}}</td>
+    <td>{{vector[i]['cnp']}}</td>
+    <td>{{vector[i]['sex']}}</td>
+    {% endfor %}
+</table><br>
+{% endif %}
+
+{% if vector2|length > 0 %}
+<h4>Afisare evenimente si numarul de fotomodele care participa la fiecare eveniment</h4>
+<table class="table">
+  <thead class="thead-dark">
+    <td><b>Nr.</b></td>
+    <td><b>Denumire</b></td>
+    <td><b>Nr. Fotomodele</b></td>
+  </thead>
+  {% for i in range(0, vector2|length):%}
+  <tr>
+    <td>{{i+1}}</td>
+    <td>{{vector2[i]['denumire']}}</td>
+    <td>{{vector2[i]['nrFotomodele']}}</td>
+    {% endfor %}
+</table>
+{% endif %}
+
+{% endblock %}

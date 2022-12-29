@@ -47,9 +47,11 @@
             <a class="nav-link dropdown-toggle" href="" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Meniu</a>
             <div class="dropdown-menu" aria-labelledby="navbarDropdown" style="background: #343a40;">
               <a class="dropdown-item" id="fotomodele" href="/fotomodele" style="color: #9a9da0;">Fotomodele</a>
-              <a class="dropdown-item" id="adauga" href="/fotomodele" style="color: #9a9da0;">Adauga fotomodel</a>
               <a class="dropdown-item" id="elimina" href="/elimina"style="color: #9a9da0;">Elimina fotomodel</a>
+              <a class="dropdown-item" id="afisare" href="/afisare"style="color: #9a9da0;">Afisare fotomodele</a>
+              <a class="dropdown-item" id="statistici" href="/statistici"style="color: #9a9da0;">Statistici</a>
               {% if session['name'] %}
+              <a class="dropdown-item" id="adauga" href="/fotomodele" style="color: #9a9da0;">Adauga fotomodel</a>
               <a class="dropdown-item" id="logout" href="/logout" style="color: #9a9da0;">Logout</a>
               {% endif %}
             </div>

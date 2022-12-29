@@ -1,0 +1,102 @@
+{% extends "base.html" %}
+{% block title %} Statistici {% endblock %}
+{% block content %}
+
+<div id="form">
+  <form method="POST" action="/form1-handler">
+    <br>
+    <h3 align="center">Statistici</h3><br>
+    <h4 align="left">Afisare fotomodele angajate dupa anul:</h4><br>
+    <div class="form-row">
+      <div class="form-group">
+        <label for="an">An</label>
+        <input type="number" class="form-control" id="an" name="an" placeholder="An">
+      </div>
+    </div>
+    <button type="submit" class="btn btn-primary">Afiseaza</button>
+  </form><br>
+
+  {% if vectan|length > 0 %}
+  <table class="table">
+    <thead class="thead-dark">
+      <td><b>Nr.</b></td>
+      <td><b>Nume</b></td>
+      <td><b>Prenume</b></td>
+      <td><b>An</b></td>
+    </thead>
+    {% for i in range(0, vectan|length):%}
+    <tr>
+      <td>{{i+1}}</td>
+      <td>{{vectan[i]['nume']}}</td>
+      <td>{{vectan[i]['prenume']}}</td>
+      <td>{{vectan[i]['an']}}</td>
+      {% endfor %}
+  </table><br>
+  {% endif %}
+
+  <form method="POST" action="/form2-handler">
+        <br><h4>Afiseaza fotomodelele cu salariul mai mic de: </h4><br>
+        <div class="form-row">
+            <div class="form-group">
+                <label for="cnp">Salariu</label>
+                <input type="number" class="form-control" id="salariu" name="salariu" placeholder="Salariu">
+            </div>
+        </div>
+        <button type="submit" class="btn btn-primary">Afiseaza</button>
+    </form>
+</div><br><br>
+
+{% if vector4|length > 0 %}
+<table class="table">
+  <thead class="thead-dark">
+    <td><b>Nr.</b></td>
+    <td><b>Nume</b></td>
+    <td><b>Prenume</b></td>
+  </thead>
+  {% for i in range(0, vector4|length):%}
+  <tr>
+    <td>{{i+1}}</td>
+    <td>{{vector4[i]['nume']}}</td>
+    <td>{{vector4[i]['prenume']}}</td>
+    {% endfor %}
+</table><br>
+{% endif %}
+
+
+{% if vector|length > 0 %}
+<h4>Afisare top 5 fotomodele cu cele mai mari salarii</h4>
+<table class="table">
+  <thead class="thead-dark">
+    <td><b>Nr.</b></td>
+    <td><b>Nume</b></td>
+    <td><b>Prenume</b></td>
+    <td><b>Salariu</b></td>
+  </thead>
+  {% for i in range(0, vector|length):%}
+  <tr>
+    <td>{{i+1}}</td>
+    <td>{{vector[i]['nume']}}</td>
+    <td>{{vector[i]['prenume']}}</td>
+    <td>{{vector[i]['salariu']}}</td>
+    {% endfor %}
+</table><br>
+{% endif %}
+
+{% if vector3|length > 0 %}
+<h4>Anul cu cele mai multe fotomodele angajate si numarul lor</h4>
+<table class="table">
+  <thead class="thead-dark">
+    <td><b>Nr.</b></td>
+    <td><b>An</b></td>
+    <td><b>Nr. fotomodele</b></td>
+  </thead>
+  {% for i in range(0, vector3|length):%}
+  <tr>
+    <td>{{i+1}}</td>
+    <td>{{vector3[i]['an']}}</td>
+    <td>{{vector3[i]['nrFot']}}</td>
+    {% endfor %}
+</table>
+{% endif %}
+
+{% endblock %}
